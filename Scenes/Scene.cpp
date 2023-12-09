@@ -1,28 +1,21 @@
 #include "Scene.h"
+#include "qgraphicsitem.h"
 #include "qgraphicsview.h"
 
-Scene::Scene(qreal x, qreal y, qreal w, qreal h, QWidget* parent)
+Scene::Scene(qreal x, qreal y, qreal w, qreal h, QGraphicsView* view)
 {
-    try
-    {
-        scene = new QGraphicsScene(x, y, w, h);
-        view = new QGraphicsView(parent);
-        view->setScene(scene);
-    }
-    catch(_exception e)
-    {
-        qDebug() << "Error init Scene";
-    }
+    rect = QRectF(x, y, w, h);
+    this->view = view;
+    scene = view->scene();
 }
 
 Scene::~Scene()
 {
-    delete view;
-    delete scene;
+
 }
 
 
-bool Scene::isCursorInScene(int x, int y)
+bool Scene::isCursorInScene(QPoint point)
 {
-    return scene->sceneRect().contains(x, y);
+    return rect.contains(point);
 }

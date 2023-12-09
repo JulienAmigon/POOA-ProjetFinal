@@ -7,12 +7,16 @@ class FenetreGraph : public QWidget
 {
     Q_OBJECT
 private:
-    Scene** scenes;
+    std::vector<Scene*> scenes;
+    QGraphicsScene* scene;
+    QGraphicsView* view;
+    Pointer* pointer;
 
 public:
-    FenetreGraph() { }
-    FenetreGraph(QWidget* parent);
+    explicit FenetreGraph(QWidget* parent = nullptr);
     ~FenetreGraph();
+
+    void mousePressEvent(QMouseEvent* event);
 };
 
 #endif // FENETRE1_H

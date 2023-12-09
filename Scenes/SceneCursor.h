@@ -7,8 +7,10 @@ class SceneCursor : public Scene
 {
 public:
     SceneCursor() { }
-    SceneCursor(qreal x, qreal y, qreal w, qreal h, QWidget* parent);
+    SceneCursor(qreal x, qreal y, qreal w, qreal h, QGraphicsView* view);
     ~SceneCursor();
+
+    void onClick(QPoint point, Pointer* pointer) override { };
 };
 
 #endif // SCENECURSOR_H

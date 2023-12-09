@@ -7,8 +7,10 @@ class SceneShapes : public Scene
 {
 public:
     SceneShapes() { }
-    SceneShapes(qreal x, qreal y, qreal w, qreal h, QWidget* parent);
+    SceneShapes(qreal x, qreal y, qreal w, qreal h, QGraphicsView* view);
     ~SceneShapes();
+
+    void onClick(QPoint point, Pointer* pointer) override { };
 };
 
 #endif // SCENESHAPES_H
