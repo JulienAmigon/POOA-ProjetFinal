@@ -1,5 +1,7 @@
+
 #include "fenetre1.h"
 #include "qapplication.h"
+#include "fenetre.h"
 
 
 int main(int argc, char *argv[]){
@@ -32,4 +34,6 @@ int main(int argc, char *argv[]){
 
     QGraphicsRectItem r;
     r.setRect(50,250, 50, 50);
+
+
     r.setBrush(Qt::red);*/

@@ -17,5 +17,5 @@ SceneCursor::SceneCursor(qreal x, qreal y, qreal w, qreal h, QGraphicsView* view
 
 SceneCursor::~SceneCursor()
 {
-
+    scene->clear();
 }

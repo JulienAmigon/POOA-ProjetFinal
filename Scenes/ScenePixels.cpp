@@ -16,7 +16,7 @@ ScenePixels::ScenePixels(qreal x, qreal y, qreal w, qreal h, QGraphicsView* view
 
 ScenePixels::~ScenePixels()
 {
-
+    scene->clear();
 }
 
 

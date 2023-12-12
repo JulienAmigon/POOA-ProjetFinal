@@ -65,3 +65,4 @@ void SceneShapes::createNewButton(std::string name, GetPixels fct, Pointer* poin
 
     buttonList.push_back(button);
 }
+
