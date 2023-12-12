@@ -5,6 +5,7 @@
 #include "qpoint.h"
 #include <vector>
 #include "../Headers.h"
+
 class Pointer
 {
 protected:

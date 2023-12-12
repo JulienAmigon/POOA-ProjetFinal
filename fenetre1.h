@@ -1,6 +1,12 @@
 #ifndef FENETRE1_H
 #define FENETRE1_H
 
+#include "Scenes/Scene.h"
+#include "Scenes/SceneCursor.h"
+#include "Scenes/ScenePixels.h"
+#include "Scenes/SceneShapes.h"
+#include <QWidget>
+#include <QLibrary>
 #include "Headers.h"
 #include "Scenes/Scene.h"
 
@@ -8,11 +14,16 @@ class FenetreGraph : public QWidget
 {
     Q_OBJECT
 private:
-
-    std::vector<Scene*> scenes;
     QGraphicsScene* scene;
     QGraphicsView* view;
+
+    SceneCursor* areaCursor;
+    ScenePixels* areaPixels;
+    SceneShapes* areaShapes;
     Pointer* pointer;
+
+    void LoadDlls();
+
 
     QString path = QDir().currentPath()+"/FormesPerso";
     QList<QPushButton *> buttonListPerso;
@@ -41,5 +52,8 @@ public:
 
     void mousePressEvent(QMouseEvent* event);
 };
+
+std::vector<QPoint> carre(QPoint, int);
+std::vector<QPoint> cercle(QPoint, int);
 
 #endif // FENETRE1_H

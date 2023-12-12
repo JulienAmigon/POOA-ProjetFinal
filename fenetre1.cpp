@@ -2,6 +2,11 @@
 #include "Scenes/SceneCursor.h"
 #include "Scenes/ScenePixels.h"
 #include "Scenes/SceneShapes.h"
+#include "qdir.h"
+#include "qevent.h"
+#include "qgraphicsview.h"
+#include <iostream>
+
 
 FenetreGraph::FenetreGraph(QWidget* parent) : QWidget{parent}
 {
@@ -15,9 +20,11 @@ FenetreGraph::FenetreGraph(QWidget* parent) : QWidget{parent}
     view->setAlignment(Qt::AlignCenter);
 
 
-    scenes.push_back(new SceneCursor(0, 0, w, 0.2*h, view));
-    scenes.push_back(new ScenePixels(0.3*w, 0.2*h, 0.7*w, 0.8*h, view));
-    scenes.push_back(new SceneShapes(0, 0.2*h, 0.3*w, 0.8*h, view));
+
+    areaCursor = new SceneCursor(0, 0, w, 0.2*h, view);
+    areaPixels = new ScenePixels(0.3*w, 0.2*h, 0.7*w, 0.8*h, view);
+    areaShapes = new SceneShapes(0, 0.2*h, 0.3*w, 0.8*h, view);
+
 
 
     pointer = new Pointer();
@@ -38,8 +45,6 @@ FenetreGraph::FenetreGraph(QWidget* parent) : QWidget{parent}
     });
 
 
-
-
     buttonBlue = new QPushButton("Blue", this);
     buttonBlue->setGeometry(QRect(QPoint(0, 0), QSize(50, 50)));
     connect(buttonBlue, &QPushButton::clicked, this, &FenetreGraph::changeColorBlue);
@@ -58,7 +63,11 @@ FenetreGraph::FenetreGraph(QWidget* parent) : QWidget{parent}
 
 FenetreGraph::~FenetreGraph()
 {
-    for (auto s : scenes)
+    delete areaCursor;
+    delete areaPixels;
+    delete areaShapes;
+  
+     for (auto s : scenes)
     {
         delete s;
     }
@@ -74,6 +83,50 @@ FenetreGraph::~FenetreGraph()
     }
 }
 
+}
+
+
+void FenetreGraph::mousePressEvent(QMouseEvent* event)
+{
+    QPoint point = event->pos();
+
+    if (areaPixels->isCursorInScene(point))
+    {
+        areaPixels->onClick(point, pointer);
+    }
+}
+
+
+
+void FenetreGraph::LoadDlls()
+{
+    QDir pluginsDir(QDir().currentPath() + "/Plugins");
+
+    QStringList listDlls = pluginsDir.entryList(QStringList("*.dll"));
+
+    for (const auto &nameDll : listDlls)
+    {
+        QLibrary dll(nameDll);
+
+        if(!dll.load())
+        {
+            qDebug() << "Error : could not load " << nameDll;
+            continue;
+        }
+
+        qDebug() << nameDll << " successfully loaded";
+
+        GetPixels fct = (GetPixels)dll.resolve("drawShape");
+
+        if (fct == nullptr)
+        {
+            dll.unload();
+            continue;
+        }
+
+        areaShapes->addDrawMethod(nameDll.toStdString().substr(0, nameDll.length() - 4), fct); 
+    }
+}
 
 // Récupère les formes persos et crée les boutons associés
 void FenetreGraph::loadFormesPerso() {
