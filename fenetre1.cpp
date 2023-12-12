@@ -52,9 +52,7 @@ FenetreGraph::FenetreGraph(QWidget* parent) : QWidget{parent}
     buttonYellow->setGeometry(QRect(QPoint(140, 0), QSize(50, 50)));
     connect(buttonYellow, &QPushButton::clicked, this, &FenetreGraph::changeColorYellow);
 
-    triangle = new QPushButton("triangele", this);
-    triangle->setGeometry(QRect(QPoint(210, 0), QSize(50, 50)));
-    connect(triangle, &QPushButton::clicked, this, &FenetreGraph::changeTriangle);
+    loadFormesPerso();
 }
 
 
@@ -64,63 +62,73 @@ FenetreGraph::~FenetreGraph()
     {
         delete s;
     }
+    scene->clear();
     delete scene;
     delete view;
     delete pointer;
     delete buttonBlue;
+    delete buttonYellow;
+    delete buttonRed;
     for (int i = 0; i < buttonListPerso.size(); ++i) {
         delete buttonListPerso.at(i);
     }
 }
 
-void FenetreGraph::changeTriangle() {
 
-    pointer->SetDrawMethod([] (QPoint point, int size) -> std::vector<QPoint> {
-        std::vector<QPoint> pixels;
-
-        for (int i = -size + 1; i < size; i++)
-        {
-            for (int j = -size + 1; j < size; j++)
-            {
-                if( i != j)
-                    pixels.push_back(point + QPoint(i, j));
-            }
-        }
-
-        return pixels;
-    });
-
-}
-
-
-// Liste les formes persos et crée les boutons associés
+// Récupère les formes persos et crée les boutons associés
 void FenetreGraph::loadFormesPerso() {
-    QString path = QDir().currentPath()+"/FormesPerso";
-    QDir dir(path);
-    //qDebug() << "Liste des formes persos : " << path;
+    QDir dir(getPath());
 
-    // Liste des fichiers du dossier
-    QStringList fileList = dir.entryList(QDir::Files);
+    // Liste des fichiers .dll du dossier
+    QStringList fileList = dir.entryList(QStringList("*.dll"));
+    QString fileName;
 
     // Pour chaque fichier, on l'ajoute en tant que bouton
     for (qsizetype i = 0; i < fileList.size(); ++i) {
-        QString fileName = fileList.value(i);
+        fileName = fileList.value(i);
         qDebug() << fileName;
 
         QPushButton * btn = new QPushButton(fileName, this);
-        btn->setGeometry(QRect(QPoint(250, 30*buttonListPerso.size()), QSize(100, 20)));
         connect(btn, &QPushButton::clicked, this, [this, fileName]() {
-           FormesPerso(fileName);
+           loadForme(fileName);
         });
 
+        // On centre les boutons sur x = 300, y selon la place dans la liste
+        btn->adjustSize();
+        btn->move(QPoint(300-(btn->width()/2), 30*buttonListPerso.size()));
+
+        // Ajout à la liste. Pour l'instant uniquement pour les supprimer dans le destructeur
         buttonListPerso.append(btn);
     }
-    qDebug() << "";
+    qDebug() << "End of directory";
 }
 
-void FenetreGraph::FormesPerso(QString fileName) {
-    qDebug() << "Forme perso : " << fileName;
+
+// Charge la forme associée à fileName dans le pointeur
+void FenetreGraph::loadForme(QString fileName) {
+
+    // On ouvre le .dll
+    QLibrary library(getPath()+'/'+fileName);
+    if (!library.load())
+        qDebug() << library.errorString();
+    if (library.load())
+        qDebug() << "library loaded";
+
+    // On crée la fonction
+    typedef std::vector<QPoint> (*DrawMethod)(QPoint, int);
+    DrawMethod draw = (DrawMethod)library.resolve("draw");
+
+    // Puis on l'applique sur le pointer
+    if (draw) {
+        pointer->SetDrawMethod(draw);
+        qDebug() << fileName << " loaded";
+    } else {
+        qDebug() << fileName << " not loaded";
+    }
+
+    // problème si on clique plusieurs fois ca load à chaque fois. Avoir library en attribut et on appelle toujours unload puis load ?
 }
+
 
 
 void FenetreGraph::mousePressEvent(QMouseEvent* event)

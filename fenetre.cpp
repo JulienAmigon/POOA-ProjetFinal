@@ -211,7 +211,8 @@ void Fenetre::listFormesPerso() {
         qDebug() << fileName;
 
         QPushButton * btn = new QPushButton(fileName, this);
-        btn->setGeometry(QRect(QPoint(250, 30*buttonList.size()), QSize(100, 20)));
+        //btn->setGeometry(QRect(QPoint(250, 30*buttonList.size()), QSize(100, 20)));
+        //btn->move(QPoint(250, 30*buttonList.size()));
         //connect(btn, &QPushButton::clicked, this, &Fenetre::switchModePerso);
         connect(btn, &QPushButton::clicked, this, [this, fileName]() {
             switchModePerso(fileName);
@@ -222,14 +223,6 @@ void Fenetre::listFormesPerso() {
     }
     qDebug() << "";
 
-    // Initialisation des boutons persos
-    /*for (qsizetype i = 0; i < buttonList.size(); ++i) {
-        buttonList.value(i)->setGeometry(QRect(QPoint(250, 30*i), QSize(100, 20)));
-        //connect(buttonList.value(i), &QPushButton::clicked, this, &Fenetre::afficherForme);
-        connect(buttonList.value(i), &QPushButton::clicked, this, [this, i]() {
-            switchModePerso(i);
-        });
-    }*/
 }
 
 

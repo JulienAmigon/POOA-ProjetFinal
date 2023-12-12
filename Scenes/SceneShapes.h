@@ -10,7 +10,9 @@ public:
     SceneShapes(qreal x, qreal y, qreal w, qreal h, QGraphicsView* view);
     ~SceneShapes();
 
-    void onClick(QPoint point, Pointer* pointer) override { };
+    void onClick(QPoint point, Pointer* pointer) override {
+        qDebug() << point.x() << pointer->GetSize();    // Juste pour éviter les warnings
+    }
 };
 
 #endif // SCENESHAPES_H

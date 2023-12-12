@@ -25,6 +25,7 @@
 #include <QFile>
 #include <QDir>
 #include <QFileDialog>
+#include <QLibrary>
 
 #include <iostream>
 #include <cmath>

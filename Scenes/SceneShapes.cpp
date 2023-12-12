@@ -18,5 +18,5 @@ SceneShapes::SceneShapes(qreal x, qreal y, qreal w, qreal h, QGraphicsView* view
 
 SceneShapes::~SceneShapes()
 {
-
+    scene->clear();
 }

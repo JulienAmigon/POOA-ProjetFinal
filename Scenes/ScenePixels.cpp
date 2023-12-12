@@ -16,7 +16,7 @@ ScenePixels::ScenePixels(qreal x, qreal y, qreal w, qreal h, QGraphicsView* view
 
 ScenePixels::~ScenePixels()
 {
-
+    scene->clear();
 }
 
 
@@ -78,6 +78,7 @@ void ScenePixels::onClick(QPoint point, Pointer* pointer)
 {
     if (!graphRectsRect.contains(point))
         return;
+
 
     std::vector<QPoint> pixels = pointer->GetPixels(GetRectGridPoint(point));
 
