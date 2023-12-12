@@ -2,7 +2,7 @@
 #define SCENE_H
 
 #include "Pointer/pointer.h"
-#include "qgraphicsscene.h"
+
 class Scene
 {
 protected:

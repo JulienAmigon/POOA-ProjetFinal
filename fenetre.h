@@ -1,48 +1,47 @@
-#ifndef FENETRE_H
-#define FENETRE_H
+#ifndef FENETRE1_H
+#define FENETRE1_H
 
 #include "Scenes/Scene.h"
 #include "Scenes/SceneCursor.h"
 #include "Scenes/ScenePixels.h"
 #include "Scenes/SceneShapes.h"
-#include <QWidget>
-#include <QLibrary>
-#include "Headers.h"
-#include "Scenes/Scene.h"
 
 class FenetreGraph : public QWidget
 {
     Q_OBJECT
 private:
+    // Scène et vue principales de la fenêtre
     QGraphicsScene* scene;
     QGraphicsView* view;
 
+    // Les différentes scènes qui contiennent les éléments
     SceneCursor* areaCursor;
     ScenePixels* areaPixels;
     SceneShapes* areaShapes;
+
     Pointer* pointer;
 
-    void LoadDlls();
-
-
-    QString path = QDir().currentPath()+"/FormesPerso";
+    // Chemin et liste de boutons des formes persos
+    QString path = QDir().currentPath()+"/Plugins";
     QList<QPushButton *> buttonListPerso;
 
 
+    // Les couleurs
     QPushButton *buttonRed;
     QPushButton *buttonYellow;
     QPushButton *buttonBlue;
-    QPushButton *triangle;
 
+    void LoadDlls();
+
+    /*
+    void loadFormesPerso();     // Charge le dossier de .dll
+    void loadForme(QString);    // Charge la fonction du .dll QString
+*/
 public:
     explicit FenetreGraph(QWidget* parent = nullptr);
     ~FenetreGraph();
 
     QString getPath() { return path; }
-
-
-    void loadFormesPerso();     // Charge le dossier de .dll
-    void loadForme(QString);    // Charge la fonction du .dll QString
 
 
     void changeColorBlue() { pointer->SetColor(Qt::blue); }
@@ -56,4 +55,4 @@ public:
 std::vector<QPoint> carre(QPoint, int);
 std::vector<QPoint> cercle(QPoint, int);
 
-#endif // FENETRE_H
+#endif // FENETRE1_H

@@ -1,10 +1,4 @@
 #include "fenetre.h"
-#include "Scenes/SceneCursor.h"
-#include "Scenes/ScenePixels.h"
-#include "Scenes/SceneShapes.h"
-#include "qdir.h"
-#include "qevent.h"
-#include "qgraphicsview.h"
 
 
 FenetreGraph::FenetreGraph(QWidget* parent) : QWidget{parent}
@@ -17,7 +11,6 @@ FenetreGraph::FenetreGraph(QWidget* parent) : QWidget{parent}
     view = new QGraphicsView(scene, this);
 
     view->setAlignment(Qt::AlignCenter);
-
 
 
     areaCursor = new SceneCursor(0, 0, w, 0.2*h, view);
@@ -56,7 +49,8 @@ FenetreGraph::FenetreGraph(QWidget* parent) : QWidget{parent}
     buttonYellow->setGeometry(QRect(QPoint(140, 0), QSize(50, 50)));
     connect(buttonYellow, &QPushButton::clicked, this, &FenetreGraph::changeColorYellow);
 
-    loadFormesPerso();
+    //loadFormesPerso();
+    LoadDlls();
 }
 
 
@@ -65,9 +59,8 @@ FenetreGraph::~FenetreGraph()
     delete areaCursor;
     delete areaPixels;
     delete areaShapes;
-
+  
     scene->clear();
-
     delete scene;
     delete view;
     delete pointer;
@@ -80,27 +73,19 @@ FenetreGraph::~FenetreGraph()
 }
 
 
-void FenetreGraph::mousePressEvent(QMouseEvent* event)
-{
-    QPoint point = event->pos();
-
-    if (areaPixels->isCursorInScene(point))
-    {
-        areaPixels->onClick(point, pointer);
-    }
-}
 
 
 
 void FenetreGraph::LoadDlls()
 {
-    QDir pluginsDir(QDir().currentPath() + "/Plugins");
+    QDir pluginsDir(getPath());
 
     QStringList listDlls = pluginsDir.entryList(QStringList("*.dll"));
 
-    for (const auto &nameDll : listDlls)
+    for (qsizetype i = 0; i < listDlls.size(); ++i)
     {
-        QLibrary dll(nameDll);
+        QString nameDll = listDlls.value(i);
+        QLibrary dll(getPath()+'/'+nameDll);
 
         if(!dll.load())
         {
@@ -110,7 +95,7 @@ void FenetreGraph::LoadDlls()
 
         qDebug() << nameDll << " successfully loaded";
 
-        GetPixels fct = (GetPixels)dll.resolve("drawShape");
+        GetPixels fct = (GetPixels)dll.resolve("draw");
 
         if (fct == nullptr)
         {
@@ -118,10 +103,16 @@ void FenetreGraph::LoadDlls()
             continue;
         }
 
-        areaShapes->addDrawMethod(nameDll.toStdString().substr(0, nameDll.length() - 4), fct); 
+        std::string name = nameDll.toStdString().substr(0, nameDll.length() - 4);
+        areaShapes->addDrawMethod(name, fct);
+        areaShapes->createNewButton(name, fct, pointer, this);
+        //createNewButton(std::string name, GetPixels fct, Pointer* pointer, QWidget* parent)
     }
 }
 
+
+
+/*
 // Récupère les formes persos et crée les boutons associés
 void FenetreGraph::loadFormesPerso() {
     QDir dir(getPath());
@@ -132,6 +123,8 @@ void FenetreGraph::loadFormesPerso() {
 
     // Pour chaque fichier, on l'ajoute en tant que bouton
     for (qsizetype i = 0; i < fileList.size(); ++i) {
+
+
         fileName = fileList.value(i);
         qDebug() << fileName;
 
@@ -175,3 +168,17 @@ void FenetreGraph::loadForme(QString fileName) {
 
     // problème si on clique plusieurs fois ca load à chaque fois. Avoir library en attribut et on appelle toujours unload puis load ?
 }
+*/
+
+
+
+void FenetreGraph::mousePressEvent(QMouseEvent* event)
+{
+    QPoint point = event->pos();
+
+    if (areaPixels->isCursorInScene(point))
+    {
+        areaPixels->onClick(point, pointer);
+    }
+}
+

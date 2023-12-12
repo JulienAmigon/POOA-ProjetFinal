@@ -48,7 +48,7 @@ GetPixels SceneShapes::getDrawMethod(std::string key)
 
 void SceneShapes::createNewButton(std::string name, GetPixels fct, Pointer* pointer, QWidget* parent)
 {
-    QPushButton* button = new QPushButton(QString(name.c_str()));
+    QPushButton* button = new QPushButton(QString(name.c_str()), parent);
 
     float buttonHeight = 0.05 * rect.height();
 
