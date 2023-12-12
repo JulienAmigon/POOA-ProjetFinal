@@ -12,15 +12,6 @@ HEADERS += \
     Scenes/SceneCursor.h \
     Scenes/ScenePixels.h \
     Scenes/SceneShapes.h \
-    fenetre.h \
-    Mode\mode.h \
-    Mode\pointeur.h \
-    Mode\eraser.h \
-    Mode\customform.h \
-    Mode\Forme\forme.h \
-    Mode\Forme\square.h \
-    Mode\Forme\triangle.h \
-    Mode\Forme\circle.h \
     fenetre1.h
 
 SOURCES += \
@@ -31,12 +22,3 @@ SOURCES += \
     Scenes/SceneShapes.cpp \
     fenetre1.cpp \
     main.cpp \
-    fenetre.cpp \
-    Mode\mode.cpp \
-    Mode\pointeur.cpp \
-    Mode\eraser.cpp \
-    Mode\customform.cpp \
-    Mode\Forme\forme.cpp \
-    Mode\Forme\square.cpp \
-    Mode\Forme\triangle.cpp \
-    Mode\Forme\circle.cpp

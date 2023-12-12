@@ -66,12 +66,9 @@ FenetreGraph::~FenetreGraph()
     delete areaCursor;
     delete areaPixels;
     delete areaShapes;
-  
-     for (auto s : scenes)
-    {
-        delete s;
-    }
+
     scene->clear();
+
     delete scene;
     delete view;
     delete pointer;
@@ -81,8 +78,6 @@ FenetreGraph::~FenetreGraph()
     for (int i = 0; i < buttonListPerso.size(); ++i) {
         delete buttonListPerso.at(i);
     }
-}
-
 }
 
 
@@ -180,19 +175,4 @@ void FenetreGraph::loadForme(QString fileName) {
     }
 
     // problème si on clique plusieurs fois ca load à chaque fois. Avoir library en attribut et on appelle toujours unload puis load ?
-}
-
-
-
-void FenetreGraph::mousePressEvent(QMouseEvent* event)
-{
-    QPoint point = event->pos();
-
-    for (auto s : scenes)
-    {
-        if (s->isCursorInScene(point))
-        {
-            s->onClick(point, pointer);
-        }
-    }
 }
