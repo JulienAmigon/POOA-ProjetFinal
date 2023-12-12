@@ -49,6 +49,12 @@ FenetreGraph::FenetreGraph(QWidget* parent) : QWidget{parent}
     buttonYellow->setGeometry(QRect(QPoint(140, 0), QSize(50, 50)));
     connect(buttonYellow, &QPushButton::clicked, this, &FenetreGraph::changeColorYellow);
 
+
+    buttonSave = new QPushButton("Save", this);
+    buttonSave->setGeometry(QRect(QPoint(900, 0), QSize(80, 20)));
+    connect(buttonSave, &QPushButton::clicked, this, &FenetreGraph::savePlugin);
+
+
     //loadFormesPerso();
     LoadDlls();
 }
@@ -67,6 +73,7 @@ FenetreGraph::~FenetreGraph()
     delete buttonBlue;
     delete buttonYellow;
     delete buttonRed;
+    delete buttonSave;
     for (int i = 0; i < buttonListPerso.size(); ++i) {
         delete buttonListPerso.at(i);
     }
@@ -106,8 +113,39 @@ void FenetreGraph::LoadDlls()
         std::string name = nameDll.toStdString().substr(0, nameDll.length() - 4);
         areaShapes->addDrawMethod(name, fct);
         areaShapes->createNewButton(name, fct, pointer, this);
-        //createNewButton(std::string name, GetPixels fct, Pointer* pointer, QWidget* parent)
     }
+}
+
+void FenetreGraph::savePlugin()
+{
+    // Accès au dossier "Plugin" et demande à ajouter un truc
+    QString fileName = QFileDialog::getSaveFileName(this,
+                                                    tr("Save File"),
+                                                    getPath(),
+                                                    tr("All Files (*)"));
+
+    // Ajoute un fichier
+    if(!fileName.isEmpty()) {
+        createFile(fileName);
+    }
+    else
+        qDebug() << "Fenetre::saveForm : Le nom du fichier est vide" << fileName;
+}
+
+void FenetreGraph::createFile(QString pathFile)
+{
+    QFile file(pathFile);
+    if (file.open(QIODevice::ReadWrite)) {
+        // Pour écrire le contenu dans le fichier
+        QTextStream stream(&file);
+
+        stream << "Ne rien faire";
+    }
+    else
+        qDebug() << "Fenetre::createFile : Impossible d'accéder au fichier :" << pathFile;
+
+
+    file.close();
 }
 
 

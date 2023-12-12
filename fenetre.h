@@ -31,7 +31,12 @@ private:
     QPushButton *buttonYellow;
     QPushButton *buttonBlue;
 
+    // Save et Load
+    QPushButton *buttonSave;
+
     void LoadDlls();
+    void savePlugin();
+    void createFile(QString);
 
     /*
     void loadFormesPerso();     // Charge le dossier de .dll
