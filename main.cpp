@@ -1,7 +1,5 @@
-
-#include "fenetre1.h"
-#include "qapplication.h"
 #include "fenetre.h"
+#include "qapplication.h"
 
 
 int main(int argc, char *argv[]){

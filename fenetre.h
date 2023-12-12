@@ -1,5 +1,5 @@
-#ifndef FENETRE1_H
-#define FENETRE1_H
+#ifndef FENETRE_H
+#define FENETRE_H
 
 #include "Scenes/Scene.h"
 #include "Scenes/SceneCursor.h"
@@ -56,4 +56,4 @@ public:
 std::vector<QPoint> carre(QPoint, int);
 std::vector<QPoint> cercle(QPoint, int);
 
-#endif // FENETRE1_H
+#endif // FENETRE_H

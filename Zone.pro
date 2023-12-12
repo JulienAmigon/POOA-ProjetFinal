@@ -11,7 +11,7 @@ HEADERS += \
     Scenes/SceneCursor.h \
     Scenes/ScenePixels.h \
     Scenes/SceneShapes.h \
-    fenetre1.h
+    fenetre.h
 
 SOURCES += \
     Pointer/pointer.cpp \
@@ -19,5 +19,5 @@ SOURCES += \
     Scenes/SceneCursor.cpp \
     Scenes/ScenePixels.cpp \
     Scenes/SceneShapes.cpp \
-    fenetre1.cpp \
+    fenetre.cpp \
     main.cpp \

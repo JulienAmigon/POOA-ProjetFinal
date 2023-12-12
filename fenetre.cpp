@@ -1,11 +1,10 @@
-#include "fenetre1.h"
+#include "fenetre.h"
 #include "Scenes/SceneCursor.h"
 #include "Scenes/ScenePixels.h"
 #include "Scenes/SceneShapes.h"
 #include "qdir.h"
 #include "qevent.h"
 #include "qgraphicsview.h"
-#include <iostream>
 
 
 FenetreGraph::FenetreGraph(QWidget* parent) : QWidget{parent}
