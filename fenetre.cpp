@@ -21,7 +21,7 @@ FenetreGraph::FenetreGraph(QWidget* parent) : QWidget{parent}
 
     pointer = new Pointer();
     pointer->SetColor(QColor(255, 0, 0));
-    pointer->SetSize(3);
+    pointer->SetSize(7);
     pointer->SetDrawMethod([] (QPoint point, int size) -> std::vector<QPoint> {
         std::vector<QPoint> pixels;
 
