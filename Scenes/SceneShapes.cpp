@@ -54,7 +54,7 @@ void SceneShapes::createNewButton(std::string name, GetPixels fct, Pointer* poin
 
     button->setGeometry(
         rect.left(),
-        rect.top() + buttonHeight * buttonList.size(),
+        rect.top() + buttonHeight * buttonList.size() + 10,
         rect.width(),
         buttonHeight
     );

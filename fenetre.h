@@ -31,8 +31,10 @@ private:
     QPushButton *buttonYellow;
     QPushButton *buttonBlue;
 
-    // Save et Load
+    // Save, plus, minus
     QPushButton *buttonSave;
+    QPushButton *buttonPlus;
+    QPushButton *buttonMinus;
 
     void LoadDlls();
     void savePlugin();
@@ -41,7 +43,7 @@ private:
     /*
     void loadFormesPerso();     // Charge le dossier de .dll
     void loadForme(QString);    // Charge la fonction du .dll QString
-*/
+    */
 public:
     explicit FenetreGraph(QWidget* parent = nullptr);
     ~FenetreGraph();
