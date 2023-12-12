@@ -49,6 +49,16 @@ FenetreGraph::FenetreGraph(QWidget* parent) : QWidget{parent}
     buttonYellow->setGeometry(QRect(QPoint(140, 0), QSize(50, 50)));
     connect(buttonYellow, &QPushButton::clicked, this, &FenetreGraph::changeColorYellow);
 
+    Pointer * p = pointer;
+
+    buttonPlus = new QPushButton("+", this);
+    buttonPlus->setGeometry(QRect(QPoint(210, 0), QSize(50, 50)));
+    connect(buttonPlus, &QPushButton::clicked, this, [p]() { p->SetSize(p->GetSize() + 1); });
+
+    buttonMinus = new QPushButton("-", this);
+    buttonMinus->setGeometry(QRect(QPoint(280, 0), QSize(50, 50)));
+    connect(buttonMinus, &QPushButton::clicked, this, [p]() { p->SetSize(p->GetSize() - 1); });
+
     //loadFormesPerso();
     LoadDlls();
 }

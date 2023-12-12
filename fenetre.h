@@ -30,6 +30,8 @@ private:
     QPushButton *buttonRed;
     QPushButton *buttonYellow;
     QPushButton *buttonBlue;
+    QPushButton *buttonPlus;
+    QPushButton *buttonMinus;
 
     void LoadDlls();
 
