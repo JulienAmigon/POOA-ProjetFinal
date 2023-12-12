@@ -76,9 +76,8 @@ void ScenePixels::SetPixels()
 
 void ScenePixels::onClick(QPoint point, Pointer* pointer)
 {
-    if (!graphRectsRect.contains(point))
+    if (!graphRectsRect.contains(point) || pointer == nullptr)
         return;
-
 
     std::vector<QPoint> pixels = pointer->GetPixels(GetRectGridPoint(point));
 

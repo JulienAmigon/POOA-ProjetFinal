@@ -3,6 +3,7 @@
 
 #include "Scenes/Scene.h"
 #include "qwidget.h"
+
 class SceneCursor : public Scene
 {
 public:

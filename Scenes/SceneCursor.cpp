@@ -12,7 +12,6 @@ SceneCursor::SceneCursor(qreal x, qreal y, qreal w, qreal h, QGraphicsView* view
     QGraphicsLineItem* line = new QGraphicsLineItem(x, y + h, x + w, y + h);
     line->setPen(QColor(0, 0, 0));
     scene->addItem(line);
-
 }
 
 
