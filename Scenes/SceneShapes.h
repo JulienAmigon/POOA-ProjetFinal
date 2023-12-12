@@ -2,7 +2,6 @@
 #define SCENESHAPES_H
 
 #include "Scenes/Scene.h"
-#include <QPushButton>
 
 typedef std::vector<QPoint> (*GetPixels)(QPoint, int);
 

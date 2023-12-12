@@ -1,9 +1,6 @@
 #ifndef POINTER_H
 #define POINTER_H
 
-#include "qcolor.h"
-#include "qpoint.h"
-#include <vector>
 #include "../Headers.h"
 
 class Pointer

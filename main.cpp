@@ -1,6 +1,3 @@
-
-#include "fenetre1.h"
-#include "qapplication.h"
 #include "fenetre.h"
 
 
