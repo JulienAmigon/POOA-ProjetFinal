@@ -8,8 +8,8 @@ typedef std::vector<QPoint> (*GetPixels)(QPoint, int);
 class SceneShapes : public Scene
 {
 private:
-    std::map<std::string, GetPixels> methodDictionary;
-    std::vector<QPushButton*> buttonList;
+    std::map<std::string, GetPixels> methodDictionary;      // Pour savoir quelle méthode
+    std::vector<QPushButton*> buttonList;                   // Liste de boutons des formes importées
 public:
     SceneShapes() { }
     SceneShapes(qreal x, qreal y, qreal w, qreal h, QGraphicsView* view);

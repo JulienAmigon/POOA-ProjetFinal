@@ -1,53 +1,36 @@
 #include "fenetre.h"
 
-
 FenetreGraph::FenetreGraph(QWidget* parent) : QWidget{parent}
 {
+    // Initialisation de la fenêtre
     float w = 1280;
     float h = 720;
     setFixedSize(w, h);
 
+    // La fenêtre contient une scène QGraphicsScene principale, avec sa vue.
+    // Les autres scènes, qui seront plus exactement des classes Scene sont dans cette vue
     scene = new QGraphicsScene(0, 0, w, h);
+
     view = new QGraphicsView(scene, this);
-
     view->setAlignment(Qt::AlignCenter);
-
 
     areaCursor = new SceneCursor(0, 0, w, 0.2*h, view);
     areaPixels = new ScenePixels(0.3*w, 0.2*h, 0.7*w, 0.8*h, view);
     areaShapes = new SceneShapes(0, 0.2*h, 0.3*w, 0.8*h, view);
 
 
-
+    // Initalisation du Pointeur
+    // Taille de base à 7 et de couleur rouge
     pointer = new Pointer();
     pointer->SetColor(QColor(255, 0, 0));
     pointer->SetSize(7);
-    pointer->SetDrawMethod([] (QPoint point, int size) -> std::vector<QPoint> {
-        std::vector<QPoint> pixels;
-
-        for (int i = -size + 1; i < size; i++)
-        {
-            for (int j = -size + 1; j < size; j++)
-            {
-                pixels.push_back(point + QPoint(i, j));
-            }
-        }
-
-        return pixels;
-    });
+    pointer->SetDrawMethod(nullptr);
 
 
-    buttonBlue = new QPushButton("Blue", this);
-    buttonBlue->setGeometry(QRect(QPoint(0, 0), QSize(50, 50)));
-    connect(buttonBlue, &QPushButton::clicked, this, &FenetreGraph::changeColorBlue);
-
-    buttonRed = new QPushButton("Red", this);
-    buttonRed->setGeometry(QRect(QPoint(70, 0), QSize(50, 50)));
-    connect(buttonRed, &QPushButton::clicked, this, &FenetreGraph::changeColorRed);
-
-    buttonYellow = new QPushButton("Yellow", this);
-    buttonYellow->setGeometry(QRect(QPoint(140, 0), QSize(50, 50)));
-    connect(buttonYellow, &QPushButton::clicked, this, &FenetreGraph::changeColorYellow);
+    // Initalisation manuelle des boutons de modification du pointeur
+    areaCursor->addColorButton("Blue", Qt::blue, pointer, this);
+    areaCursor->addColorButton("Red", Qt::red, pointer, this);
+    areaCursor->addColorButton("Yellow", Qt::yellow, pointer, this);
 
     Pointer * p = pointer;
 
@@ -60,166 +43,65 @@ FenetreGraph::FenetreGraph(QWidget* parent) : QWidget{parent}
     connect(buttonMinus, &QPushButton::clicked, this, [p]() { p->SetSize(p->GetSize() - 1); });
 
 
-    buttonSave = new QPushButton("Save", this);
-    buttonSave->setGeometry(QRect(QPoint(900, 0), QSize(80, 20)));
-    connect(buttonSave, &QPushButton::clicked, this, &FenetreGraph::savePlugin);
-
-
-    //loadFormesPerso();
+    // Chargement des plugins
     LoadDlls();
 }
 
 
 FenetreGraph::~FenetreGraph()
 {
+    delete buttonPlus;
+    delete buttonMinus;
+    delete pointer;
     delete areaCursor;
     delete areaPixels;
     delete areaShapes;
-  
     scene->clear();
     delete scene;
     delete view;
-    delete pointer;
-    delete buttonBlue;
-    delete buttonYellow;
-    delete buttonRed;
-    delete buttonSave;
-    for (int i = 0; i < buttonListPerso.size(); ++i) {
-        delete buttonListPerso.at(i);
-    }
 }
 
 
-
-
-
+/****************************************************************/
+/* Méthode qui charge les fonctions de dll du dossier "Plugins" */
+/****************************************************************/
 void FenetreGraph::LoadDlls()
 {
+    // Liste de chaque fichier .dll
     QDir pluginsDir(getPath());
-
     QStringList listDlls = pluginsDir.entryList(QStringList("*.dll"));
 
-    for (qsizetype i = 0; i < listDlls.size(); ++i)
-    {
+    // Pour chacun, on va récupérer la méthode de dessin, si elle existe
+    for (qsizetype i = 0; i < listDlls.size(); ++i) {
         QString nameDll = listDlls.value(i);
-        QLibrary dll(getPath()+'/'+nameDll);
+        QLibrary library(getPath()+'/'+nameDll);
 
-        if(!dll.load())
-        {
+        if(!library.load())  {
             qDebug() << "Error : could not load " << nameDll;
             continue;
         }
+        else
+            qDebug() << nameDll << " successfully loaded";
 
-        qDebug() << nameDll << " successfully loaded";
+        GetPixels functionDraw = (GetPixels)library.resolve("draw");
 
-        GetPixels fct = (GetPixels)dll.resolve("draw");
-
-        if (fct == nullptr)
-        {
-            dll.unload();
+        if (functionDraw == nullptr) {
+            library.unload();
             continue;
         }
 
+
+        // Puis on va indiquer à la zone des plugins d'ajouter le boutons associé
         std::string name = nameDll.toStdString().substr(0, nameDll.length() - 4);
-        areaShapes->addDrawMethod(name, fct);
-        areaShapes->createNewButton(name, fct, pointer, this);
+        getAreaShape()->addDrawMethod(name, functionDraw);
+        getAreaShape()->createNewButton(name, functionDraw, pointer, this);
     }
 }
 
-void FenetreGraph::savePlugin()
-{
-    // Accès au dossier "Plugin" et demande à ajouter un truc
-    QString fileName = QFileDialog::getSaveFileName(this,
-                                                    tr("Save File"),
-                                                    getPath(),
-                                                    tr("All Files (*)"));
 
-    // Ajoute un fichier
-    if(!fileName.isEmpty()) {
-        createFile(fileName);
-    }
-    else
-        qDebug() << "Fenetre::saveForm : Le nom du fichier est vide" << fileName;
-}
-
-void FenetreGraph::createFile(QString pathFile)
-{
-    QFile file(pathFile);
-    if (file.open(QIODevice::ReadWrite)) {
-        // Pour écrire le contenu dans le fichier
-        QTextStream stream(&file);
-
-        stream << "Ne rien faire";
-    }
-    else
-        qDebug() << "Fenetre::createFile : Impossible d'accéder au fichier :" << pathFile;
-
-
-    file.close();
-}
-
-
-
-/*
-// Récupère les formes persos et crée les boutons associés
-void FenetreGraph::loadFormesPerso() {
-    QDir dir(getPath());
-
-    // Liste des fichiers .dll du dossier
-    QStringList fileList = dir.entryList(QStringList("*.dll"));
-    QString fileName;
-
-    // Pour chaque fichier, on l'ajoute en tant que bouton
-    for (qsizetype i = 0; i < fileList.size(); ++i) {
-
-
-        fileName = fileList.value(i);
-        qDebug() << fileName;
-
-        QPushButton * btn = new QPushButton(fileName, this);
-        connect(btn, &QPushButton::clicked, this, [this, fileName]() {
-           loadForme(fileName);
-        });
-
-        // On centre les boutons sur x = 300, y selon la place dans la liste
-        btn->adjustSize();
-        btn->move(QPoint(300-(btn->width()/2), 30*buttonListPerso.size()));
-
-        // Ajout à la liste. Pour l'instant uniquement pour les supprimer dans le destructeur
-        buttonListPerso.append(btn);
-    }
-    qDebug() << "End of directory";
-}
-
-
-// Charge la forme associée à fileName dans le pointeur
-void FenetreGraph::loadForme(QString fileName) {
-
-    // On ouvre le .dll
-    QLibrary library(getPath()+'/'+fileName);
-    if (!library.load())
-        qDebug() << library.errorString();
-    if (library.load())
-        qDebug() << "library loaded";
-
-    // On crée la fonction
-    typedef std::vector<QPoint> (*DrawMethod)(QPoint, int);
-    DrawMethod draw = (DrawMethod)library.resolve("draw");
-
-    // Puis on l'applique sur le pointer
-    if (draw) {
-        pointer->SetDrawMethod(draw);
-        qDebug() << fileName << " loaded";
-    } else {
-        qDebug() << fileName << " not loaded";
-    }
-
-    // problème si on clique plusieurs fois ca load à chaque fois. Avoir library en attribut et on appelle toujours unload puis load ?
-}
-*/
-
-
-
+/*********************************************************************/
+/* Méthode pour récupérer le clic de la souris et effectuer l'action */
+/*********************************************************************/
 void FenetreGraph::mousePressEvent(QMouseEvent* event)
 {
     QPoint point = event->pos();

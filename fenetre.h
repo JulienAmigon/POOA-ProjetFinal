@@ -1,7 +1,6 @@
-#ifndef FENETRE1_H
-#define FENETRE1_H
+#ifndef FENETRE_H
+#define FENETRE_H
 
-#include "Scenes/Scene.h"
 #include "Scenes/SceneCursor.h"
 #include "Scenes/ScenePixels.h"
 #include "Scenes/SceneShapes.h"
@@ -21,40 +20,22 @@ private:
 
     Pointer* pointer;
 
-    // Chemin et liste de boutons des formes persos
+    // Chemin des plugins
     QString path = QDir().currentPath()+"/Plugins";
-    QList<QPushButton *> buttonListPerso;
 
-
-    // Les couleurs
-    QPushButton *buttonRed;
-    QPushButton *buttonYellow;
-    QPushButton *buttonBlue;
-
-    // Save, plus, minus
-    QPushButton *buttonSave;
+    //plus, minus
     QPushButton *buttonPlus;
     QPushButton *buttonMinus;
 
     void LoadDlls();
-    void savePlugin();
-    void createFile(QString);
-
-    /*
-    void loadFormesPerso();     // Charge le dossier de .dll
-    void loadForme(QString);    // Charge la fonction du .dll QString
-    */
 public:
     explicit FenetreGraph(QWidget* parent = nullptr);
     ~FenetreGraph();
 
     QString getPath() { return path; }
-
-
-    void changeColorBlue() { pointer->SetColor(Qt::blue); }
-    void changeColorRed() { pointer->SetColor(Qt::red); }
-    void changeColorYellow() { pointer->SetColor(Qt::yellow); }
-
+    SceneCursor* getAreaCursor() { return areaCursor; }
+    ScenePixels* getAreaPixels() { return areaPixels; }
+    SceneShapes* getAreaShape() { return areaShapes; }
 
     void mousePressEvent(QMouseEvent* event);
 };
@@ -62,4 +43,46 @@ public:
 std::vector<QPoint> carre(QPoint, int);
 std::vector<QPoint> cercle(QPoint, int);
 
-#endif // FENETRE1_H
+#endif // FENETRE_H
+
+
+
+
+/*
+void savePlugin();
+void createFile(QString);
+*/
+
+/*
+void FenetreGraph::savePlugin()
+{
+    // Accès au dossier "Plugin" et demande à ajouter un truc
+    QString fileName = QFileDialog::getSaveFileName(this,
+                                                    tr("Save File"),
+                                                    getPath(),
+                                                    tr("All Files (*)"));
+
+    // Ajoute un fichier
+    if(!fileName.isEmpty()) {
+        createFile(fileName);
+    }
+    else
+        qDebug() << "Fenetre::saveForm : Le nom du fichier est vide" << fileName;
+}
+
+void FenetreGraph::createFile(QString pathFile)
+{
+    QFile file(pathFile);
+    if (file.open(QIODevice::ReadWrite)) {
+        // Pour écrire le contenu dans le fichier
+        QTextStream stream(&file);
+
+        stream << "Ne rien faire";
+    }
+    else
+        qDebug() << "Fenetre::createFile : Impossible d'accéder au fichier :" << pathFile;
+
+
+    file.close();
+}
+*/

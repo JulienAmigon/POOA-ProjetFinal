@@ -1,6 +1,4 @@
 #include "ScenePixels.h"
-#include "qgraphicsitem.h"
-#include "qgraphicsview.h"
 
 
 ScenePixels::ScenePixels(qreal x, qreal y, qreal w, qreal h, QGraphicsView* view) : Scene(x, y, w, h, view)

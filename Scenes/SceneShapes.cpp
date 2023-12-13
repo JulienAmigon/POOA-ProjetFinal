@@ -1,5 +1,4 @@
 #include "SceneShapes.h"
-#include "qgraphicsitem.h"
 
 SceneShapes::SceneShapes(qreal x, qreal y, qreal w, qreal h, QGraphicsView* view) : Scene(x, y, w, h, view)
 {
@@ -26,12 +25,18 @@ SceneShapes::~SceneShapes()
 }
 
 
+/*********************************************************************/
+/* Ajoute la métode 'value' au dictionnaire de pointeur de fonctions */
+/*********************************************************************/
 void SceneShapes::addDrawMethod(std::string key, GetPixels value)
 {
     methodDictionary.insert({key, value});
 }
 
 
+/***********************************/
+/* Pour récupérer la bonne méthode */
+/***********************************/
 GetPixels SceneShapes::getDrawMethod(std::string key)
 {
     GetPixels method = nullptr;
@@ -46,6 +51,10 @@ GetPixels SceneShapes::getDrawMethod(std::string key)
 }
 
 
+
+/************************************************/
+/* Crée un nouveau méthode lié à la méthode fct */
+/************************************************/
 void SceneShapes::createNewButton(std::string name, GetPixels fct, Pointer* pointer, QWidget* parent)
 {
     QPushButton* button = new QPushButton(QString(name.c_str()), parent);

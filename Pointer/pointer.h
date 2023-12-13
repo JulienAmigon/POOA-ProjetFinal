@@ -6,12 +6,14 @@
 class Pointer
 {
 protected:
-    int size;
-    QColor color;
-    std::vector<QPoint> (*getPixels)(QPoint, int);
+    int size;                                           // Taille du dessin
+    QColor color;                                       // Couleur du dessin
+    std::vector<QPoint> (*getPixels)(QPoint, int);      // Le dessin, sous forme de pointeur de fonction
 
 public:
     Pointer();
+
+    // Les méthodes de Pointer ne sont que des getteur/setteur
     void SetDrawMethod(std::vector<QPoint>(*method)(QPoint, int)) { getPixels = method; }
     std::vector<QPoint> GetPixels(QPoint);
 

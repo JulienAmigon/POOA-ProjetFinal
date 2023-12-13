@@ -1,6 +1,4 @@
 #include "Scene.h"
-#include "qgraphicsitem.h"
-#include "qgraphicsview.h"
 
 Scene::Scene(qreal x, qreal y, qreal w, qreal h, QGraphicsView* view)
 {
